@@ -397,6 +397,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);min
 .cc-chaussettes{background:#7B3F6E;}
 .cc-calecon{background:#C8A0C0;}
 .cc-promo{background:#C0392B;}
+.cc-maroquinerie{background:#8B5E3C;}
 .cc-divers{background:#5FAF96;}
 /* Back button in article list */
 .back-cat-btn{display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;color:var(--fuchsia);text-transform:uppercase;letter-spacing:.3px;padding:14px 18px 4px;}
@@ -463,7 +464,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);min
   <!-- SECTION BANNERS -->
   <div class="section-banners" id="sectionBanners">
     <!-- Mode — orange Capri style -->
-    <div class="sec-banner sb-mode" onclick="switchNav('shop')">
+    <div class="sec-banner sb-mode" onclick="switchNav('nouveautes')">
       <svg class="sb-shape" viewBox="0 0 100 100" fill="none">
         <path d="M50 5 C55 25,65 30,50 40 C35 30,45 25,50 5Z" fill="white" transform="rotate(0 50 50)"/>
         <path d="M50 5 C55 25,65 30,50 40 C35 30,45 25,50 5Z" fill="white" transform="rotate(60 50 50)"/>
@@ -474,8 +475,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);min
         <circle cx="50" cy="50" r="10" fill="white"/>
       </svg>
       <div>
-        <div class="sb-name">Mode</div>
-        <div class="sb-sub">Prêt-à-porter</div>
+        <div class="sb-name">Nouveautés</div>
+        <div class="sb-sub">Derniers arrivages</div>
       </div>
     </div>
     <!-- Maison — vert Tulum style -->
@@ -583,13 +584,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--dark);min
         <option value="">— Choisir —</option>
         <optgroup label="👔 Mode">
           <option value="tshirt">👕 T-shirt</option><option value="short">🩳 Short</option><option value="veste">🧥 Veste</option>
-          <option value="pull">🧶 Pull</option><option value="survetement">🏃 Survêtement</option><option value="puff">🧥 Puff / Doudoune</option>
+          <option value="pull">🧶 Pull</option><option value="survetement">🏃 Survêtement</option><option value="puff">💨 Puff</option>
           <option value="chaussures">👟 Chaussures</option><option value="montres">⌚ Montres</option><option value="lunettes">🕶️ Lunettes</option>
           <option value="ceinture">👔 Ceinture</option><option value="chaussettes">🧦 Chaussettes</option><option value="calecon">🩲 Caleçon</option>
         </optgroup>
         <optgroup label="🏠 Maison"><option value="deco">🏺 Décoration</option><option value="multimedia">📱 Multimédia</option><option value="maison">🏠 Maison</option></optgroup>
         <optgroup label="💨 Puff"><option value="puff_vape">💨 Puff</option></optgroup>
-        <optgroup label="✨ Autres"><option value="divers">✨ Divers</option></optgroup>
+        <optgroup label="✨ Autres"><option value="maroquinerie">👜 Maroquinerie</option></optgroup>
       </select>
     </div>
     <div class="fgroup"><label class="flbl">Description</label><input class="finput" id="fDesc" type="text" placeholder="Matière, coupe, couleur…"></div>
@@ -645,10 +646,10 @@ const PUFF_CATS=['puff_vape'];
 const ALL_CATS=[
   {id:'all',label:'Tout',emoji:'🏪'},{id:'tshirt',label:'T-shirt',emoji:'👕'},{id:'short',label:'Short',emoji:'🩳'},
   {id:'veste',label:'Veste',emoji:'🧥'},{id:'pull',label:'Pull',emoji:'🧶'},{id:'survetement',label:'Survêtement',emoji:'🏃'},
-  {id:'puff',label:'Puff',emoji:'🧥'},{id:'chaussures',label:'Chaussures',emoji:'👟'},{id:'montres',label:'Montres',emoji:'⌚'},
+  {id:'puff',label:'Puff',emoji:'💨'},{id:'chaussures',label:'Chaussures',emoji:'👟'},{id:'montres',label:'Montres',emoji:'⌚'},
   {id:'lunettes',label:'Lunettes',emoji:'🕶️'},{id:'ceinture',label:'Ceinture',emoji:'👔'},{id:'chaussettes',label:'Chaussettes',emoji:'🧦'},
   {id:'calecon',label:'Caleçon',emoji:'🩲'},{id:'promo',label:'Promo',emoji:'🔥'},{id:'deco',label:'Déco',emoji:'🏺'},
-  {id:'multimedia',label:'Multimédia',emoji:'📱'},{id:'maison',label:'Maison',emoji:'🏠'},{id:'puff_vape',label:'Puff',emoji:'💨'},{id:'divers',label:'Divers',emoji:'✨'},
+  {id:'multimedia',label:'Multimédia',emoji:'📱'},{id:'maison',label:'Maison',emoji:'🏠'},{id:'puff_vape',label:'Puff',emoji:'💨'},{id:'maroquinerie',label:'Maroquinerie',emoji:'👜'},
 ];
 const CATLBL={};ALL_CATS.forEach(c=>CATLBL[c.id]=c.label);
 let products=[],cart=[],editingId=null,activeProd=null,selectedSize=null,currentCat='all',currentSection='shop';
@@ -660,20 +661,20 @@ db.collection('products').orderBy('createdAt','desc').onSnapshot(snap=>{
 
 // ── CATEGORY GRID CONFIG ──
 const CAT_CARDS=[
-  {id:'tshirt',label:'T-shirt',cls:'cc-tshirt',shape:'flower'},
-  {id:'short',label:'Short',cls:'cc-short',shape:'wave'},
-  {id:'veste',label:'Veste',cls:'cc-veste',shape:'leaf'},
-  {id:'pull',label:'Pull',cls:'cc-pull',shape:'sun'},
-  {id:'survetement',label:'Survêtement',cls:'cc-survetement',shape:'circle'},
-  {id:'puff',label:'Puff / Doudoune',cls:'cc-puff',shape:'leaf'},
-  {id:'chaussures',label:'Chaussures',cls:'cc-chaussures',shape:'wave'},
-  {id:'montres',label:'Montres',cls:'cc-montres',shape:'circle'},
-  {id:'lunettes',label:'Lunettes',cls:'cc-lunettes',shape:'flower'},
+  {id:'calecon',label:'Caleçon',cls:'cc-calecon',shape:'leaf'},
   {id:'ceinture',label:'Ceinture',cls:'cc-ceinture',shape:'sun'},
   {id:'chaussettes',label:'Chaussettes',cls:'cc-chaussettes',shape:'wave'},
-  {id:'calecon',label:'Caleçon',cls:'cc-calecon',shape:'leaf'},
+  {id:'chaussures',label:'Chaussures',cls:'cc-chaussures',shape:'wave'},
+  {id:'lunettes',label:'Lunettes',cls:'cc-lunettes',shape:'flower'},
+  {id:'maroquinerie',label:'Maroquinerie',cls:'cc-maroquinerie',shape:'leaf'},
+  {id:'montres',label:'Montres',cls:'cc-montres',shape:'circle'},
   {id:'promo',label:'🔥 Promos',cls:'cc-promo',shape:'sun'},
-  {id:'divers',label:'Divers',cls:'cc-divers',shape:'circle'},
+  {id:'puff',label:'Puff',cls:'cc-puff',shape:'wave'},
+  {id:'pull',label:'Pull',cls:'cc-pull',shape:'sun'},
+  {id:'short',label:'Short',cls:'cc-short',shape:'wave'},
+  {id:'survetement',label:'Survêtement',cls:'cc-survetement',shape:'circle'},
+  {id:'tshirt',label:'T-shirt',cls:'cc-tshirt',shape:'flower'},
+  {id:'veste',label:'Veste',cls:'cc-veste',shape:'leaf'},
 ];
 
 const SVG_SHAPES={
@@ -758,11 +759,23 @@ function switchNav(section){
   document.getElementById('demandeView').classList.remove('active');
   document.getElementById('adminView').classList.remove('active');
   document.getElementById('shopView').classList.add('active');
-  if(section==='home'){
-    showShopMainView();
-    renderGridFiltered(products.filter(p=>HOME_CATS.includes(p.cat)),'Maison & Multimédia');
+  if(section==='nouveautes'){
+    document.getElementById('catGridView').style.display='none';
+    document.getElementById('catArticlesView').style.display='none';
     document.getElementById('mainHero').style.display='none';
     document.getElementById('sectionBanners').style.display='none';
+    document.getElementById('sec-hd-main').style.display='flex';
+    document.getElementById('pgrid').style.display='grid';
+    const newItems=products.filter(p=>p.badge==='new');
+    renderGridFiltered(newItems,'Nouveautés ✨');
+  } else if(section==='home'){
+    document.getElementById('catGridView').style.display='none';
+    document.getElementById('catArticlesView').style.display='none';
+    document.getElementById('mainHero').style.display='none';
+    document.getElementById('sectionBanners').style.display='none';
+    document.getElementById('sec-hd-main').style.display='flex';
+    document.getElementById('pgrid').style.display='grid';
+    renderGridFiltered(products.filter(p=>HOME_CATS.includes(p.cat)),'Maison & Multimédia');
   } else if(section==='categories'){
     showCatGrid();
   } else {
